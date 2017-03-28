@@ -8,5 +8,5 @@
 
 
 cd $PBS_O_WORKDIR
-python ~/gan/mnist_gan.py
+python ~/playing-with-gan/mnist_gan.py
 
