@@ -110,7 +110,7 @@ print("Accuracy: {:0.02f}% ({} of {}) right".format(acc, n_rig, n_tot))
 losses = {"d": [], "g": []}
 
 def train_for_n(nb_epoch=5000, BATCH_SIZE=32):
-    losses = zeros(nb_epoch,2)
+    losses = zeros([nb_epoch,2])
     for e in range(nb_epoch):        
         # Make generative images
         image_batch = X_train[numpy.random.randint(0,X_train.shape[0], size=BATCH_SIZE),:,:]
@@ -126,7 +126,6 @@ def train_for_n(nb_epoch=5000, BATCH_SIZE=32):
 
         make_trainable(discriminator, True)
         losses[e,0] = discriminator.train_on_batch(X,y)
-        losses["d"].append(d_loss)
 
         # Train GAN
         noise_tr = numpy.random.uniform(0,1,size=[BATCH_SIZE,100])
