@@ -134,7 +134,6 @@ def train_for_n(nb_epoch=5000, BATCH_SIZE=32):
 
         make_trainable(discriminator, False)
         losses[e,1] = GAN.train_on_batch(noise_tr, y2)
-        losses["g"].append(g_loss)
 
     return losses
 
