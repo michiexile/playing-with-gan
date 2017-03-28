@@ -166,3 +166,24 @@ savetxt("mnist_train_3.csv", losses_3)
 discriminator.save("discriminator_3.hdf5")
 generator.save("generator_3.hdf5")
 
+print("Finished training")
+
+testidx = random.sample(range(0, X_test.shape[0]), n_train)
+XT = X_train[testidx,:,:]
+
+noise_gen = numpy.random.uniform(0,1,size=[XT.shape[0],100])
+generated_images = generator.predict(noise_gen)
+X_post = r_[XT.reshape((XT.shape[0], 1) + XT.shape[1:]), generated_images]
+n = XT.shape[0]
+y_post = zeros([2*n,2])
+y_post[:n,1] = 1
+y_post[n:,0] = 1
+y_hat = discriminator.predict(X_post)
+
+y_hat_idx = argmax(y_hat, axis=1)
+y_idx = argmax(y_post, axis=1)
+diff = y_idx - y_hat_idx
+n_tot = y_post.shape[0]
+n_rig = (diff==0).sum()
+acc = n_rig*100.0/n_tot
+print("Accuracy: {:0.02f}% ({} of {}) right".format(acc, n_rig, n_tot))
