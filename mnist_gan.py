@@ -20,7 +20,7 @@ dopt = keras.optimizers.Adam(lr=1e-3)
 # Load MNIST
 import gzip
 from six.moves import cPickle
-f = gzip.open('mnist.pkl.gz', 'rb')
+f = gzip.open('/scratch/m.johansson/playing-with-gan/mnist.pkl.gz', 'rb')
 (X_train, y_train), (X_test, y_test) = cPickle.load(f)
 shp = tuple([1] + list(X_train.shape[1:]))
 
