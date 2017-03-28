@@ -22,9 +22,14 @@ import gzip
 from six.moves import cPickle
 f = gzip.open('/scratch/m.johansson/playing-with-gan/mnist.pkl.gz', 'rb')
 (X_train, y_train), (X_test, y_test) = cPickle.load(f)
-shp = tuple([1] + list(X_train.shape[1:]))
-
+_,img_row,img_col = X_train.shape
+X_train = X_train.astype('float32') / 255
+X_train = X_train.reshape(X_train.shape[0], 1, img_row, img_col)
+X_test = X_test.astype('float32') / 255
+X_test = X_test.reshape(X_test.shape[0], 1, img_row, img_col)
 dropout_rate = 0.25
+
+shp = X_train.shape
 
 # Generator
 nch = 200
@@ -46,7 +51,6 @@ generator = Model(g_input, g_V)
 generator.compile(loss='binary_crossentropy', optimizer=opt)
 
 # Discriminator
-dropout_rate = 0.1
 d_input = Input(shape=shp)
 H = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', activation='relu')(d_input)
 H = LeakyReLU(0.2)(H)
@@ -107,8 +111,6 @@ n_rig = (diff==0).sum()
 acc = n_rig*100.0/n_tot
 print("Accuracy: {:0.02f}% ({} of {}) right".format(acc, n_rig, n_tot))
 
-losses = {"d": [], "g": []}
-
 def train_for_n(nb_epoch=5000, BATCH_SIZE=32):
     losses = zeros([nb_epoch,2])
     for e in range(nb_epoch):        
@@ -127,7 +129,7 @@ def train_for_n(nb_epoch=5000, BATCH_SIZE=32):
         make_trainable(discriminator, True)
         losses[e,0] = discriminator.train_on_batch(X,y)
 
-        # Train GAN
+        # Train generator
         noise_tr = numpy.random.uniform(0,1,size=[BATCH_SIZE,100])
         y2 = zeros([BATCH_SIZE,2])
         y2[:,1] = 1
