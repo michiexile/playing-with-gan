@@ -26,13 +26,14 @@ _,img_row,img_col = X_train.shape
 
 print(X_train.shape)
 
-X_train = X_train.astype('float32') / 255
-#X_train = X_train.reshape(X_train.shape[0], 1, img_row, img_col)
-X_test = X_test.astype('float32') / 255
-#X_test = X_test.reshape(X_test.shape[0], 1, img_row, img_col)
+def add_channel(tensor):
+    return tensor.reshape([tensor.shape[0], 1] + tensor.shape[1:])
+
+X_train = add_channel(X_train.astype('float32')/255)
+X_test = add_channel(X_test.astype('float32')/255)
 dropout_rate = 0.25
 
-shp = X_train.shape
+shp = X_train.shape[1:]
 
 print(shp)
 
@@ -56,8 +57,8 @@ generator = Model(g_input, g_V)
 generator.compile(loss='binary_crossentropy', optimizer=opt)
 
 print("Compiled generator. " +
-      "\tInput shape: {}".format(generator.input_shape) +
-      "\tOutput shape: {}".format(generator.output_shape))
+      "\n\tInput shape: {}".format(generator.input_shape) +
+      "\n\tOutput shape: {}".format(generator.output_shape))
 
 # Discriminator
 d_input = Input(shape=shp)
@@ -76,8 +77,8 @@ discriminator = Model(d_input, d_V)
 discriminator.compile(loss='categorical_crossentropy', optimizer=dopt)
 
 print("Compiled discriminator." +
-      "\tInput shape: {}".format(discriminator.input_shape) +
-      "\tOutput shape: {}".format(discriminator.output_shape))
+      "\n\tInput shape: {}".format(discriminator.input_shape) +
+      "\n\tOutput shape: {}".format(discriminator.output_shape))
 
 
 # Start / stop training
@@ -97,8 +98,8 @@ GAN = Model(gan_input, gan_V)
 GAN.compile(loss='categorical_crossentropy', optimizer=opt)
 
 print("Compiled GAN" +
-      "\tInput shape: {}".format(GAN.input_shape) +
-      "\tOutput shape: {}".format(GAN.output_shape))
+      "\n\tInput shape: {}".format(GAN.input_shape) +
+      "\n\tOutput shape: {}".format(GAN.output_shape))
 
 n_train = 20
 trainidx = random.sample(range(0, X_train.shape[0]), n_train)
@@ -108,8 +109,7 @@ XT = X_train[trainidx,:,:]
 
 noise_gen = numpy.random.uniform(0,1,size=[XT.shape[0],100])
 generated_images = generator.predict(noise_gen)
-#X_pre = r_[XT.reshape((XT.shape[0], 1) + XT.shape[1:]), generated_images]
-X_pre = r_[XT, generated_images]
+X_pre = r_[add_channel(XT), generated_images]
 n = XT.shape[0]
 y_pre = zeros([2*n,2])
 y_pre[:n,1] = 1
@@ -189,8 +189,7 @@ XT = X_train[testidx,:,:]
 
 noise_gen = numpy.random.uniform(0,1,size=[XT.shape[0],100])
 generated_images = generator.predict(noise_gen)
-#X_post = r_[XT.reshape((XT.shape[0], 1) + XT.shape[1:]), generated_images]
-X_post = r_[XT, generated_images]
+X_post = r_[add_channel(XT), generated_images]
 n = XT.shape[0]
 y_post = zeros([2*n,2])
 y_post[:n,1] = 1
