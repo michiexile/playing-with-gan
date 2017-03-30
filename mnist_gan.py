@@ -27,7 +27,7 @@ _,img_row,img_col = X_train.shape
 print(X_train.shape)
 
 def add_channel(tensor):
-    return tensor.reshape([tensor.shape[0], 1] + tensor.shape[1:])
+    return tensor.reshape((tensor.shape[0], 1) + tensor.shape[1:])
 
 X_train = add_channel(X_train.astype('float32')/255)
 X_test = add_channel(X_test.astype('float32')/255)
