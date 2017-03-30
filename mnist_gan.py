@@ -50,6 +50,8 @@ g_V = Activation('sigmoid')(H)
 generator = Model(g_input, g_V)
 generator.compile(loss='binary_crossentropy', optimizer=opt)
 
+print("Compiled generator")
+
 # Discriminator
 d_input = Input(shape=shp)
 H = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', activation='relu')(d_input)
@@ -66,6 +68,7 @@ d_V = Dense(2, activation='softmax')(H)
 discriminator = Model(d_input, d_V)
 discriminator.compile(loss='categorical_crossentropy', optimizer=dopt)
 
+print("Compiled discriminator")
 
 
 # Start / stop training
@@ -84,7 +87,7 @@ gan_V = discriminator(generator(gan_input))
 GAN = Model(gan_input, gan_V)
 GAN.compile(loss='categorical_crossentropy', optimizer=opt)
 
-
+print("Compiled GAN")
 
 n_train = 20
 trainidx = random.sample(range(0, X_train.shape[0]), n_train)
