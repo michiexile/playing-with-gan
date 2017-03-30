@@ -4,7 +4,7 @@
 #PBS -N MNIST_GAN
 #PBS -l select=1:ncpus=1:ngpus=1
 #PBS -l place=free
-#PBS -q development
+#PBS -q production
 
 
 cd $PBS_O_WORKDIR
