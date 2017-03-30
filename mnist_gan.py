@@ -17,14 +17,15 @@ keras.backend.set_image_dim_ordering('th')
 opt = keras.optimizers.Adam(lr=1e-4)
 dopt = keras.optimizers.Adam(lr=1e-3)
 
+# scale for epoch sizes
+n_train = 1000
+
 # Load MNIST
 import gzip
 from six.moves import cPickle
 f = gzip.open('/scratch/m.johansson/playing-with-gan/mnist.pkl.gz', 'rb')
 (X_train, y_train), (X_test, y_test) = cPickle.load(f)
 _,img_row,img_col = X_train.shape
-
-print(X_train.shape)
 
 def add_channel(tensor):
     return tensor.reshape((tensor.shape[0], 1) + tensor.shape[1:])
@@ -34,8 +35,6 @@ X_test = add_channel(X_test.astype('float32')/255)
 dropout_rate = 0.25
 
 shp = X_train.shape[1:]
-
-print(shp)
 
 # Generator
 nch = 200
@@ -101,13 +100,10 @@ print("Compiled GAN" +
       "\n\tInput shape: {}".format(GAN.input_shape) +
       "\n\tOutput shape: {}".format(GAN.output_shape))
 
-n_train = 20
-trainidx = random.sample(range(0, X_train.shape[0]), n_train)
+trainidx = random.sample(range(0, X_train.shape[0]), 10*n_train)
 XT = X_train[trainidx,:,:]
 noise_gen = numpy.random.uniform(0,1,size=[XT.shape[0],100])
 generated_images = generator.predict(noise_gen)
-print(generated_images.shape)
-print(XT.shape)
 X_pre = r_[XT, generated_images]
 n = XT.shape[0]
 y_pre = zeros([2*n,2])
