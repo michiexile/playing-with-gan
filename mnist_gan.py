@@ -23,6 +23,9 @@ from six.moves import cPickle
 f = gzip.open('/scratch/m.johansson/playing-with-gan/mnist.pkl.gz', 'rb')
 (X_train, y_train), (X_test, y_test) = cPickle.load(f)
 _,img_row,img_col = X_train.shape
+
+print(X_train.shape)
+
 X_train = X_train.astype('float32') / 255
 X_train = X_train.reshape(X_train.shape[0], 1, img_row, img_col)
 X_test = X_test.astype('float32') / 255
@@ -30,6 +33,8 @@ X_test = X_test.reshape(X_test.shape[0], 1, img_row, img_col)
 dropout_rate = 0.25
 
 shp = X_train.shape
+
+print(shp)
 
 # Generator
 nch = 200
