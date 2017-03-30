@@ -55,7 +55,9 @@ g_V = Activation('sigmoid')(H)
 generator = Model(g_input, g_V)
 generator.compile(loss='binary_crossentropy', optimizer=opt)
 
-print("Compiled generator")
+print("Compiled generator. " +
+      "\tInput shape: {}".format(generator.input_shape) +
+      "\tOutput shape: {}".format(generator.output_shape))
 
 # Discriminator
 d_input = Input(shape=shp)
@@ -73,7 +75,9 @@ d_V = Dense(2, activation='softmax')(H)
 discriminator = Model(d_input, d_V)
 discriminator.compile(loss='categorical_crossentropy', optimizer=dopt)
 
-print("Compiled discriminator")
+print("Compiled discriminator." +
+      "\tInput shape: {}".format(discriminator.input_shape) +
+      "\tOutput shape: {}".format(discriminator.output_shape))
 
 
 # Start / stop training
@@ -92,7 +96,9 @@ gan_V = discriminator(generator(gan_input))
 GAN = Model(gan_input, gan_V)
 GAN.compile(loss='categorical_crossentropy', optimizer=opt)
 
-print("Compiled GAN")
+print("Compiled GAN" +
+      "\tInput shape: {}".format(GAN.input_shape) +
+      "\tOutput shape: {}".format(GAN.output_shape))
 
 n_train = 20
 trainidx = random.sample(range(0, X_train.shape[0]), n_train)
