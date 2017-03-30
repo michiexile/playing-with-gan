@@ -86,7 +86,7 @@ GAN.compile(loss='categorical_crossentropy', optimizer=opt)
 
 
 
-n_train = 10000
+n_train = 20
 trainidx = random.sample(range(0, X_train.shape[0]), n_train)
 XT = X_train[trainidx,:,:]
 
@@ -145,7 +145,7 @@ with open("generator.json", "w") as f:
     f.write(generator.to_json())
 
 # Train
-losses_1 = train_for_n(nb_epoch=6000)
+losses_1 = train_for_n(nb_epoch=6*n_train)
 savetxt("mnist_train_1.csv", losses_1)
 discriminator.save("discriminator_1.hdf5")
 generator.save("generator_1.hdf5")
@@ -153,7 +153,7 @@ generator.save("generator_1.hdf5")
 # Slow down; train
 opt.lr.set_value(1e-5)
 dopt.lr.set_value(1e-4)
-losses_2 = train_for_n(nb_epoch=2000)
+losses_2 = train_for_n(nb_epoch=2*n_train)
 savetxt("mnist_train_2.csv", losses_2)
 discriminator.save("discriminator_2.hdf5")
 generator.save("generator_2.hdf5")
@@ -161,7 +161,7 @@ generator.save("generator_2.hdf5")
 # Slow down; train
 opt.lr.set_value(1e-6)
 dopt.lr.set_value(1e-5)
-losses_3 = train_for_n(nb_epoch=2000)
+losses_3 = train_for_n(nb_epoch=2*n_train)
 savetxt("mnist_train_3.csv", losses_3)
 discriminator.save("discriminator_3.hdf5")
 generator.save("generator_3.hdf5")
